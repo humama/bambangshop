@@ -78,6 +78,21 @@ This is the place for you to write reflections:
 
 #### Reflection Publisher-1
 
+1. Dalam pola Observer, Pelanggan biasanya direpresentasikan sebagai antarmuka atau trait untuk mendefinisikan kontrak yang harus dipatuhi oleh pelanggan konkret. Hal ini memungkinkan fleksibilitas dan loose coupling antara subjek (BambangShop dalam hal ini) dan pengamatnya (pelanggan). Dengan mendefinisikan antarmuka atau trait, subjek tidak perlu mengetahui detail implementasi spesifik dari pelanggannya, sehingga memudahkan penambahan atau penghapusan pelanggan tanpa harus memodifikasi subjek.
+
+Dalam kasus BambangShop, menggunakan antarmuka atau trait untuk Pelanggan tetap bermanfaat. Ini akan memungkinkan berbagai jenis pelanggan untuk mengimplementasikan perilaku mereka sendiri untuk memperbarui ketika diberi tahu oleh BambangShop. Sebagai contoh, satu pelanggan mungkin memperbarui tampilannya, sementara yang lain mungkin mengirimkan email pemberitahuan. Dengan mendefinisikan antarmuka atau trait, BambangShop tetap terlepas dari implementasi spesifik pelanggannya.
+
+2. Pilihan antara menggunakan Vec (daftar) atau DashMap (peta/dictionary) untuk menyimpan pelanggan tergantung pada kebutuhan aplikasi. Menggunakan Vec akan memungkinkan penyimpanan sederhana dari pelanggan dalam urutan berurutan. Namun, jika Anda perlu dengan cepat mengakses pelanggan berdasarkan pengidentifikasi unik mereka (id dalam Program, url dalam Pelanggan), maka menggunakan struktur data peta/dictionary seperti DashMap akan lebih efisien.
+
+Jika Anda perlu mengambil pelanggan dengan efisien berdasarkan pengidentifikasi unik mereka, menggunakan DashMap atau implementasi peta serupa yang aman dari segi utas akan diperlukan. Ini memberikan akses cepat berdasarkan kunci dan memastikan keamanan utas saat mengakses dan memodifikasi peta secara bersamaan.
+
+3. Di Rust, memastikan keselamatan utas sangat penting, terutama dalam program yang konkuren. Meskipun menggunakan variabel statis untuk daftar pelanggan (SUBSCRIBERS) mungkin terlihat nyaman, hal ini memperkenalkan potensi masalah dengan keselamatan utas, karena variabel statis dibagikan di semua utas.
+
+Menggunakan DashMap atau struktur data yang serupa yang aman dari segi utas adalah pendekatan yang masuk akal untuk memastikan keselamatan utas saat berurusan dengan sumber daya bersama seperti daftar pelanggan. DashMap menyediakan akses konkuren ke HashMap yang mendasarinya, memungkinkan beberapa utas untuk membaca dan memodifikasi peta dengan aman.
+
+Alternatifnya, Anda dapat mengimplementasikan pola Singleton untuk memastikan bahwa hanya satu instance dari daftar pelanggan ada di seluruh aplikasi. Namun, Anda masih perlu memastikan keselamatan utas saat mengakses dan memodifikasi instance singleton, yang bisa dicapai dengan menggunakan Mutex atau RwLock untuk menyinkronkan akses ke sumber daya bersama.
+
+
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
