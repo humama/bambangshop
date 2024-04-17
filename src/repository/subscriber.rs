@@ -40,4 +40,5 @@ impl SubscriberRepository{
             return Some(result.unwrap().1);
         }
         return None;
+    }
 }
