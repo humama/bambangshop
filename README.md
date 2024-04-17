@@ -95,4 +95,28 @@ Alternatifnya, Anda dapat mengimplementasikan pola Singleton untuk memastikan ba
 
 #### Reflection Publisher-2
 
+1. Dalam pola MVC (Model-View-Controller), terdapat kebutuhan untuk memisahkan "Service" dan "Repository" dari "Model". Ini didasarkan pada prinsip pemisahan kepentingan yang menyatakan bahwa berbagai aspek dari aplikasi harus dipisahkan ke dalam modul atau lapisan yang berbeda. Dengan memisahkan "Service" dan "Repository" dari "Model":
+
+        Lapisan Layanan (Service): Lapisan layanan menginkapsulasi logika bisnis aplikasi. Ini bertindak sebagai perantara antara controller dan repository. Dengan memisahkan logika bisnis ke dalam lapisan layanan, kita dapat mencapai pemisahan kepentingan yang bersih, membuat basis kode lebih mudah dipahami, diuji, dan dipelihara.
+
+        Lapisan Repositori (Repository): Lapisan repositori bertanggung jawab atas akses dan manipulasi data. Ini mengabstraksi detail tentang bagaimana data disimpan dan diambil, memberikan antarmuka yang bersih untuk lapisan layanan berinteraksi. Memisahkan repositori dari model memungkinkan untuk beralih antara mekanisme penyimpanan data tanpa memengaruhi logika bisnis.
+
+2. Jika kita hanya menggunakan Model tanpa memisahkan "Service" dan "Repository":
+
+        Kompleksitas Kode: Tanpa memisahkan kepentingan, Model menjadi penuh dengan logika bisnis dan logika akses data. Ini menyebabkan peningkatan kompleksitas kode, pengurangan kemudahan pemeliharaan, dan kesulitan dalam pengujian. Ini juga melanggar prinsip tanggung jawab tunggal, membuat basis kode sulit dipahami dan diperluas.
+
+        Kesulitan dalam Pengujian: Pengujian menjadi lebih sulit karena logika bisnis dan logika akses data terjalin erat dalam Model. Pengujian unit menjadi rumit, karena sulit untuk mengisolasi dan menguji komponen individu. Hal ini dapat mengakibatkan penurunan cakupan pengujian dan peningkatan risiko bug masuk ke produksi.
+
+3. Postman adalah alat yang sangat berguna untuk pengembangan dan pengujian API. Beberapa fitur Postman yang saya temukan bermanfaat termasuk:
+
+        Pembangunan Permintaan: Postman menyediakan antarmuka yang intuitif untuk membangun permintaan HTTP, memungkinkan pengguna untuk menentukan metode permintaan, header, parameter, dan payload dengan mudah.
+
+        Koleksi dan Lingkungan: Koleksi memungkinkan pengguna untuk mengatur dan mengelompokkan permintaan terkait, sementara lingkungan memungkinkan konfigurasi variabel yang dapat digunakan di seluruh permintaan, membuat pengujian lebih efisien dan terorganisir.
+
+        Pengujian dan Otomatisasi: Postman mendukung penulisan pengujian menggunakan JavaScript, yang dapat dieksekusi setelah mengirim permintaan untuk memvalidasi respons. Selain itu, alat ini menyediakan fitur untuk mengotomatisasi pengujian dan mengintegrasikannya ke dalam alur kerja CI/CD.
+
+        Dokumentasi: Postman memungkinkan pengguna untuk menghasilkan dokumentasi API secara otomatis dari koleksi, memudahkan berbagi spesifikasi API dan petunjuk penggunaan dengan rekan tim atau klien.
+
+Postman secara keseluruhan membantu dalam pengembangan dan pengujian API, membuatnya menjadi alat yang sangat berharga bagi insinyur perangkat lunak yang bekerja pada proyek berbasis API.
+
 #### Reflection Publisher-3
