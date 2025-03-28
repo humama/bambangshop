@@ -86,4 +86,10 @@ This is the place for you to write reflections:
 
 #### Reflection Publisher-2
 
+1. Memisahkan Service dan Repository layer dari Model merupakan implementasi <i>separation of concerns</i> dimana Service, Repository, dan Model masing-masing memiliki fungsi yang berbeda. Implementasi tersebut sejalan dengan Single Responsibility Principle dan memastikan Service, Repository, dan Model tidak memiliki pekerjaan yang overlap. Dengan adanya <i>separation of concerns</i>, layer Service, Repository, dan Model dapat berfokus dengan tugasnya masing-masing tanpa harus mengkhawatirkan layer lainnya.
+ 
+ 2. Memasukkan seluruh pekerjaan Service layer dan Repository layer ke dalam Model layer tentu akan membuat Model memiliki tugas yang banyak. Selain menyimpan data, Model dituntut untuk menghandle business logic dan data access yang masing-masing seharusnya dihandle oleh Service dan Repository layer. Kode yang ditulis juga pastinya akan tertumpuk pada Model sehingga seiring bertambahnya fungsionalitas pada aplikasi, <i>maintenance</i> pada Model akan semakin sulit untuk dilakukan.
+ 
+ 3. Di samping menyediakan layanan untuk mengirim HTTP request, Postman memiliki beberapa fitur tambahan yang berguna untuk testing sebuah aplikasi. Salah satu fitur tersebut merupakan fitur collections yang dapat menyimpan konfigurasi HTTP request yang akan dikirim. Fitur collections menyimpan sebuah konfigurasi dengan susunan yang mirip dengan file system pada umumnya. Di Postman, sebuah konfigurasi dapat dianalogikan sebagai sebuah file dalam file system. Layaknya file, konfigurasi-konfigurasi pada Postman dapat dikelompokkan ke dalam sebuah direktori bersama konfigurasi maupun direktori lainnya. Selain itu, konfigurasi yang ada dapat dibagikan ke pengguna lain. Fitur <i>sharing</i> ini sangatlah berguna bagi organisasi/team yang sedang mengembangkan sebuah aplikasi sebab konfigurasi yang sama dapat dibagikan ke anggota organisasi/team lainnya untuk testing. Fitur ini merupakan salah satu fitur Postman yang kemungkinan besar akan sering saya gunakan ketika sedang mengembangkan sebuah aplikasi.
+
 #### Reflection Publisher-3
