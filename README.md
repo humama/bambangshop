@@ -78,6 +78,12 @@ This is the place for you to write reflections:
 
 #### Reflection Publisher-1
 
+1. Ya, Model struct `Subscriber` pada BambangShop lebih baik dijadikan interface/trait. Dengan menjadikan `Subscriber` sebuah trait, sebuah object pada codebase dapat bergantung kepada trait tersebut daripada implementasi concrete class yang ada sehingga perubahan yang terjadi pada concrete class tidak akan terlalu memengaruhi bagian lain pada codebase.
+ 
+ 2. Untuk kasus bambangshop ini, penggunaan `DashMap` sudah tepat karena terdapatt operasi `delete` berdasarkan `url`, dimana `url` bersifat unik.
+ 
+ 3. Ya, kita masih membutuhkan `DashMap` untuk memastikan operasi CRUD bersifat thread-safe. Lagipula, implementasi pattern singleton tetap membutuhkan sinkronisasi agar tidak terjadi hal yang tidak diinginkan dalam penerapan concurrency di Rust.
+
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
