@@ -53,7 +53,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [✓] Commit: `Create Subscriber model struct.`
     -   [✓] Commit: `Create Notification model struct.`
     -   [✓] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Subscriber repository.`
+    -   [✓] Commit: `Implement add function in Subscriber repository.`
     -   [ ] Commit: `Implement list_all function in Subscriber repository.`
     -   [ ] Commit: `Implement delete function in Subscriber repository.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
