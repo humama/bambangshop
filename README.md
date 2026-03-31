@@ -69,7 +69,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [✓] Commit: `Implement notify function in Notification service to notify each Subscriber.`
     -   [✓] Commit: `Implement publish function in Program service and Program controller.`
     -   [✓] Commit: `Edit Product service methods to call notify after create/delete.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
+    -   [✓] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -265,3 +265,86 @@ Kesimpulan
 - Postman sangat membantu dalam proses testing API dan debugging selama development
 
 #### Reflection Publisher-3
+
+1. Variasi Observer Pattern yang digunakan
+
+Pada implementasi tutorial ini, kita menggunakan Push Model dari Observer Pattern.
+
+Hal ini terlihat dari:
+
+- Publisher (ProductService / NotificationService) secara aktif mengirim (push) data notifikasi ke setiap subscriber
+- Data yang dikirim sudah lengkap dalam bentuk Notification payload
+- Subscriber hanya menerima dan tidak perlu meminta data tambahan
+
+Contoh pada kode:
+
+```rust
+subscriber_clone.update(payload_clone);
+```
+
+Artinya:
+
+- Publisher yang mengontrol aliran data
+- Subscriber bersifat pasif (hanya menerima)
+
+2. Kelebihan dan Kekurangan jika menggunakan Pull Model
+
+Jika dibandingkan dengan Push Model, berikut analisis jika kita menggunakan Pull Model:
+
+Kelebihan Pull Model:
+
+- Subscriber bisa mengambil data sesuai kebutuhan (lebih fleksibel)
+- Data yang dikirim lebih minimal (hanya trigger/event saja)
+- Mengurangi kemungkinan over-fetching data yang tidak dibutuhkan
+
+Kekurangan Pull Model:
+
+- Membutuhkan request tambahan dari subscriber ke publisher
+- Menambah kompleksitas komunikasi (lebih banyak API call)
+- Latency lebih tinggi (karena tidak langsung menerima data lengkap)
+- Membutuhkan endpoint tambahan untuk menyediakan data detail
+
+Perbandingan dengan kasus ini:
+
+Pada BambangShop:
+
+- Notifikasi butuh data lengkap (title, url, status, dll)
+- Subscriber kemungkinan hanya ingin langsung menerima info
+
+Jadi:
+
+- Push Model lebih cocok karena lebih sederhana dan efisien
+
+3. Dampak jika tidak menggunakan Multi-threading
+
+Pada kode saat ini:
+
+```rust
+thread::spawn(move || subscriber_clone.update(payload_clone));
+```
+
+Ini berarti setiap notifikasi dikirim dalam thread terpisah (parallel).
+
+Jika TANPA multi-threading:
+
+- Notifikasi dikirim secara sequential (satu per satu)
+- Jika satu subscriber lambat:
+  - Semua subscriber lain ikut tertunda
+- Waktu eksekusi jadi lebih lama
+
+Dampak lebih lanjut:
+
+- Blocking process (menghambat request utama)
+- Performa menurun jika subscriber banyak
+- User experience buruk (response API jadi lambat)
+
+Dengan multi-threading:
+- Notifikasi dikirim secara paralel
+- Lebih cepat dan efisien
+- Tidak blocking proses utama
+
+Kesimpulan
+
+- Tutorial ini menggunakan Push Model karena lebih sederhana dan cocok untuk notifikasi langsung
+- Pull Model lebih fleksibel, tetapi menambah kompleksitas dan latency
+- Multi-threading sangat penting untuk meningkatkan performa dan menghindari blocking saat mengirim notifikasi ke banyak subscriber
