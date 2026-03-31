@@ -63,7 +63,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [✓] Commit: `Implement subscribe function in Notification controller.`
     -   [✓] Commit: `Implement unsubscribe function in Notification service.`
     -   [✓] Commit: `Implement unsubscribe function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
+    -   [✓] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
     -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
     -   [ ] Commit: `Implement notify function in Notification service to notify each Subscriber.`
@@ -82,21 +82,21 @@ This is the place for you to write reflections:
 
 Dalam Observer Pattern, biasanya Subscriber (Observer) dibuat sebagai interface agar:
 
-Bisa memiliki banyak implementasi berbeda
-Lebih fleksibel (polymorphism)
+- Bisa memiliki banyak implementasi berbeda
+- Lebih fleksibel (polymorphism)
 
 Namun, pada kasus BambangShop, penggunaan trait tidak terlalu diperlukan karena:
 
-Semua subscriber memiliki struktur yang sama (URL dan nama)
-Tidak ada variasi perilaku (behavior) antar subscriber
-Subscriber hanya digunakan sebagai data holder (model struct)
+- Semua subscriber memiliki struktur yang sama (URL dan nama)
+- Tidak ada variasi perilaku (behavior) antar subscriber
+- Subscriber hanya digunakan sebagai data holder (model struct)
 
 Jadi, menggunakan satu struct Subscriber saja sudah cukup untuk kebutuhan saat ini.
 
 Namun, jika ke depannya:
 
-Ada banyak tipe subscriber (misalnya EmailSubscriber, WebhookSubscriber, dll)
-Atau masing-masing punya cara notifikasi berbeda
+- Ada banyak tipe subscriber (misalnya EmailSubscriber, WebhookSubscriber, dll)
+- Atau masing-masing punya cara notifikasi berbeda
 
 Maka penggunaan trait akan lebih tepat untuk mendukung extensibility.
 
@@ -104,23 +104,23 @@ Maka penggunaan trait akan lebih tepat untuk mendukung extensibility.
 
 Dalam konteks ini:
 
-id pada Program dan url pada Subscriber harus unik
-Kita juga butuh operasi:
-tambah (add)
-ambil semua (list)
-hapus (delete)
+- id pada Program dan url pada Subscriber harus unik
+- Kita juga butuh operasi:
+  - tambah (add)
+  - ambil semua (list)
+  - hapus (delete)
 
 Jika menggunakan Vec (list):
 
-Tidak menjamin keunikan data secara langsung
-Pencarian dan penghapusan butuh iterasi (O(n))
-Kurang efisien untuk data yang besar
+- Tidak menjamin keunikan data secara langsung
+- Pencarian dan penghapusan butuh iterasi (O(n))
+- Kurang efisien untuk data yang besar
 
 Sedangkan DashMap (map/dictionary):
 
-Menjamin keunikan key (misalnya URL sebagai key)
-Operasi lebih cepat (O(1))
-Lebih efisien untuk lookup, insert, dan delete
+- Menjamin keunikan key (misalnya URL sebagai key)
+- Operasi lebih cepat (O(1))
+- Lebih efisien untuk lookup, insert, dan delete
 
 Jadi, menggunakan DashMap lebih tepat dibandingkan Vec untuk kasus ini.
 
@@ -128,8 +128,8 @@ Jadi, menggunakan DashMap lebih tepat dibandingkan Vec untuk kasus ini.
 
 Dalam design pattern:
 
-Singleton memastikan hanya ada satu instance dari suatu objek
-DashMap adalah struktur data yang thread-safe
+- Singleton memastikan hanya ada satu instance dari suatu objek
+- DashMap adalah struktur data yang thread-safe
 
 Pada kode ini:
 
@@ -141,24 +141,127 @@ lazy_static! {
 
 Kita sebenarnya sudah menerapkan:
 
-Singleton pattern → karena SUBSCRIBERS hanya satu instance global
-Thread-safe collection → menggunakan DashMap
+- Singleton pattern → karena SUBSCRIBERS hanya satu instance global
+- Thread-safe collection → menggunakan DashMap
 
 Jika hanya menggunakan Singleton tanpa DashMap:
 
-Tidak otomatis thread-safe
-Bisa terjadi race condition saat akses bersamaan
+- Tidak otomatis thread-safe
+- Bisa terjadi race condition saat akses bersamaan
 
 Sedangkan dengan DashMap:
 
-Aman untuk concurrent access (multi-thread)
-Tidak perlu manual locking (seperti Mutex)
+- Aman untuk concurrent access (multi-thread)
+- Tidak perlu manual locking (seperti Mutex)
 
 Jadi:
 
-Singleton saja tidak cukup
-DashMap tetap diperlukan untuk menjamin thread safety
+- Singleton saja tidak cukup
+- DashMap tetap diperlukan untuk menjamin thread safety
+
+Kesimpulan
+
+- Struct Subscriber sudah cukup, trait belum diperlukan saat ini
+- DashMap lebih cocok dibanding Vec karena efisiensi dan keunikan data
+- Kombinasi Singleton + DashMap adalah solusi terbaik untuk thread-safe global state
 
 #### Reflection Publisher-2
+
+1. Mengapa perlu memisahkan Service dan Repository dari Model?
+
+Dalam pola Model-View-Controller (MVC) klasik, Model memang mencakup:
+
+- Data (state)
+- Business logic
+
+Namun, dalam praktik pengembangan modern, kita sering menerapkan prinsip:
+
+- Separation of Concerns
+- Single Responsibility Principle (SRP)
+
+Dengan memisahkan:
+
+- Model → hanya merepresentasikan struktur data (misalnya Subscriber, Notification)
+- Repository → menangani akses data (CRUD, penyimpanan, pengambilan data)
+- Service → menangani business logic (aturan bisnis, validasi, orkestrasi proses)
+
+Keuntungannya:
+
+- Kode lebih modular dan mudah dipahami
+- Mudah diuji (testing lebih terisolasi)
+- Mudah dikembangkan (scalable)
+- Mengurangi ketergantungan antar komponen
+
+Jadi, pemisahan ini membuat arsitektur lebih rapi dan maintainable dibandingkan semua logika ditumpuk di Model.
+
+2. Apa yang terjadi jika hanya menggunakan Model?
+
+Jika semua logic dimasukkan ke dalam Model (misalnya Program, Subscriber, Notification), maka:
+
+Masalah yang akan muncul:
+
+- Model menjadi terlalu kompleks (God Object)
+- Satu model harus:
+  - Menyimpan data
+  - Mengelola data
+  - Menjalankan business logic
+- Interaksi antar model jadi saling bergantung (tight coupling)
+
+Contoh:
+
+- Subscriber harus tahu cara menyimpan dirinya sendiri
+- Notification harus tahu cara mengambil subscriber
+- Program harus tahu cara mengirim notifikasi
+
+Akibatnya:
+
+- Kode sulit dibaca
+- Sulit di-maintain
+- Sulit di-debug
+- Sulit untuk testing (karena semua logic bercampur)
+
+Dengan pemisahan:
+
+- Model tetap sederhana
+- Service mengatur alur
+- Repository mengurus data
+
+Jadi kompleksitas berkurang dan struktur lebih jelas.
+
+3. Bagaimana Postman membantu dalam testing?
+
+Saya sudah mencoba menggunakan Postman, dan tool ini sangat membantu dalam menguji API yang saya buat.
+
+Manfaat utama:
+
+- Mengirim HTTP request dengan mudah (GET, POST, dll)
+- Tidak perlu membuat frontend dulu
+- Bisa langsung melihat response dari server
+- Mempermudah debugging API
+
+Contoh penggunaan pada project ini:
+- Menguji endpoint:
+  - ```/notification/subscribe/<product_type>```
+  - ```/notification/unsubscribe/<product_type>```
+- Mengirim data JSON subscriber
+- Melihat apakah data berhasil ditambahkan atau dihapus
+
+Fitur Postman yang menarik:
+- Collections
+→ Menyimpan kumpulan API request untuk project
+- Environment Variables
+→ Menyimpan base URL atau parameter (memudahkan reuse)
+- History
+→ Melihat request yang pernah dikirim
+- Automated Testing
+→ Bisa menambahkan script untuk validasi response
+- Mock Server (opsional)
+→ Simulasi API tanpa backend
+
+Kesimpulan
+
+- Pemisahan Model, Service, dan Repository membuat kode lebih terstruktur dan scalable
+- Menggunakan hanya Model akan meningkatkan kompleksitas dan menyulitkan maintenance
+- Postman sangat membantu dalam proses testing API dan debugging selama development
 
 #### Reflection Publisher-3
