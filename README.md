@@ -56,7 +56,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [✓] Commit: `Implement add function in Subscriber repository.`
     -   [✓] Commit: `Implement list_all function in Subscriber repository.`
     -   [✓] Commit: `Implement delete function in Subscriber repository.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
+    -   [✓] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -77,6 +77,87 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+
+1. Apakah masih perlu interface (trait) untuk Subscriber?
+
+Dalam Observer Pattern, biasanya Subscriber (Observer) dibuat sebagai interface agar:
+
+Bisa memiliki banyak implementasi berbeda
+Lebih fleksibel (polymorphism)
+
+Namun, pada kasus BambangShop, penggunaan trait tidak terlalu diperlukan karena:
+
+Semua subscriber memiliki struktur yang sama (URL dan nama)
+Tidak ada variasi perilaku (behavior) antar subscriber
+Subscriber hanya digunakan sebagai data holder (model struct)
+
+Jadi, menggunakan satu struct Subscriber saja sudah cukup untuk kebutuhan saat ini.
+
+Namun, jika ke depannya:
+
+Ada banyak tipe subscriber (misalnya EmailSubscriber, WebhookSubscriber, dll)
+Atau masing-masing punya cara notifikasi berbeda
+
+Maka penggunaan trait akan lebih tepat untuk mendukung extensibility.
+
+2. Apakah Vec cukup atau perlu DashMap?
+
+Dalam konteks ini:
+
+id pada Program dan url pada Subscriber harus unik
+Kita juga butuh operasi:
+tambah (add)
+ambil semua (list)
+hapus (delete)
+
+Jika menggunakan Vec (list):
+
+Tidak menjamin keunikan data secara langsung
+Pencarian dan penghapusan butuh iterasi (O(n))
+Kurang efisien untuk data yang besar
+
+Sedangkan DashMap (map/dictionary):
+
+Menjamin keunikan key (misalnya URL sebagai key)
+Operasi lebih cepat (O(1))
+Lebih efisien untuk lookup, insert, dan delete
+
+Jadi, menggunakan DashMap lebih tepat dibandingkan Vec untuk kasus ini.
+
+3. Apakah masih perlu DashMap atau cukup Singleton?
+
+Dalam design pattern:
+
+Singleton memastikan hanya ada satu instance dari suatu objek
+DashMap adalah struktur data yang thread-safe
+
+Pada kode ini:
+
+```rust
+lazy_static! {
+    static ref SUBSCRIBERS: DashMap<...> = DashMap::new();
+}
+```
+
+Kita sebenarnya sudah menerapkan:
+
+Singleton pattern → karena SUBSCRIBERS hanya satu instance global
+Thread-safe collection → menggunakan DashMap
+
+Jika hanya menggunakan Singleton tanpa DashMap:
+
+Tidak otomatis thread-safe
+Bisa terjadi race condition saat akses bersamaan
+
+Sedangkan dengan DashMap:
+
+Aman untuk concurrent access (multi-thread)
+Tidak perlu manual locking (seperti Mutex)
+
+Jadi:
+
+Singleton saja tidak cukup
+DashMap tetap diperlukan untuk menjamin thread safety
 
 #### Reflection Publisher-2
 
